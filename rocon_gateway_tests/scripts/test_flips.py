@@ -8,15 +8,14 @@
 ##############################################################################
 
 import rospy
+import rosunit
 import sys
-import rocon_console.console as console
-from rocon_gateway import samples
+import unittest
+
+from gateway_msgs.msg import RemoteRuleWithStatus as FlipStatus
 from rocon_gateway import GatewaySampleRuntimeError
 from rocon_gateway import Graph
-from rocon_gateway import GatewayError
-import unittest
-import rosunit
-
+from rocon_gateway import samples
 
 ##############################################################################
 # Main
@@ -92,9 +91,16 @@ class TestFlips(unittest.TestCase):
 
     def _wait_for_flipped_interface(self):
         flipped_interface = None
-        while not flipped_interface:
+        flipped_interface_accepted = False
+        while not flipped_interface_accepted:
             self.graph.update()
             flipped_interface = self.graph._local_gateway.flipped_connections
+            # Make sure that every flip has also been accepted
+            flipped_interface_accepted = True
+            for flip in flipped_interface:
+                if flip.status != FlipStatus.ACCEPTED:
+                    flipped_interface_accepted = False
+                    break
             rospy.sleep(0.2)
         return flipped_interface
 
