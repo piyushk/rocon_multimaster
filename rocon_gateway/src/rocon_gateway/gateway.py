@@ -159,10 +159,10 @@ class Gateway(object):
         # Update flip status
         flipped_connections = self.flipped_interface.get_flipped_connections()
         for flip in flipped_connections:
-            for hub in remote_gateway_hub_index[flip.remote_rule.gateway]:
-                status = hub.get_flip_request_status(flip.remote_rule.gateway, flip.remote_rule.rule)
+            for hub in remote_gateway_hub_index[flip.gateway]:
+                status = hub.get_flip_request_status(flip.gateway, flip.rule)
                 if status is not None:
-                    flip_state_changed = self.flipped_interface.update_flip_status(flip.remote_rule, status)
+                    flip_state_changed = self.flipped_interface.update_flip_status(flip, status)
                     state_changed = state_changed or flip_state_changed
                     break
 

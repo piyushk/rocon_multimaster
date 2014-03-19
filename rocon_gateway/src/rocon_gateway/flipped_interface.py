@@ -11,7 +11,7 @@ import copy
 import re
 
 import rocon_gateway_utils
-from gateway_msgs.msg import RemoteRuleWithStatus
+from gateway_msgs.msg import RemoteRule as FlipStatus
 
 from . import utils
 from . import interactive_interface
@@ -107,7 +107,7 @@ class FlippedInterface(interactive_interface.InteractiveInterface):
         # set flip status to unknown first, and then read previous status if available
         flip_status = utils.create_empty_connection_type_dictionary()
         for connection_type in utils.connection_types:
-            flip_status[connection_type] = [RemoteRuleWithStatus.UNKNOWN] * len(flipped[connection_type])
+            flip_status[connection_type] = [FlipStatus.UNKNOWN] * len(flipped[connection_type])
 
         for connection_type in utils.connection_types:
             for new_index, flip in enumerate(flipped[connection_type]):
@@ -242,8 +242,9 @@ class FlippedInterface(interactive_interface.InteractiveInterface):
         flipped_connections = []
         for connection_type in utils.connection_types:
             for i, connection in enumerate(self.flipped[connection_type]):
-                flipped_connections.append(RemoteRuleWithStatus(connection,
-                                                                self.flip_status[connection_type][i]))
+                connection_with_status = copy.deepcopy(connection)
+                connection_with_status.status = self.flip_status[connection_type][i]
+                flipped_connections.append(connection_with_status)
         return flipped_connections
 
 if __name__ == "__main__":

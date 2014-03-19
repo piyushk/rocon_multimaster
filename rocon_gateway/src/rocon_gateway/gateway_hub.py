@@ -11,7 +11,7 @@ import threading
 import rospy
 import re
 import utils
-from gateway_msgs.msg import RemoteRuleWithStatus as FlipStatus
+from gateway_msgs.msg import RemoteRule as FlipStatus
 import gateway_msgs.msg as gateway_msgs
 import rocon_python_comms
 import rocon_python_utils
@@ -623,7 +623,7 @@ class GatewayHub(rocon_hub_client.Hub):
           @type utils.Registration
 
           @param status : pending/accepted/blocked
-          @type same as gateway_msgs.msg.RemoteRuleWithStatus.status
+          @type same as gateway_msgs.msg.RemoteRule.status
 
           @return True if this hub was used to send the flip request, and the status was updated. False otherwise.
           @rtype Boolean
@@ -656,7 +656,7 @@ class GatewayHub(rocon_hub_client.Hub):
           the request), then None is returned
 
           @return the flip status or None
-          @rtype same as gateway_msgs.msg.RemoteRuleWithStatus.status or None
+          @rtype same as gateway_msgs.msg.RemoteRule.status or None
         '''
         if source_gateway is None:
             source_gateway = self._unique_gateway_name
